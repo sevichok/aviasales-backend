@@ -1,0 +1,1 @@
+export const EXPIRE_IN_24H = 86400

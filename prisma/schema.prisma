@@ -1,0 +1,170 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"] // for macOS
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRoles {
+  Admin   @map("admin")
+  Client  @map("client")
+  Manager @map("manager")
+}
+
+enum FlightStatus {
+  Planned   @map("planned")
+  Flying    @map("flying")
+  Fulfilled @map("fulfilled")
+  Canceled  @map("canceled")
+}
+
+enum TicketStatus {
+  Fulfilled @map("fulfilled")
+  InCart    @map("in cart")
+  Canceled  @map("canceled")
+  Ordered   @map("ordered")
+}
+
+enum UserPermissions {
+  All                   @map("permissions.all") // admin
+  Signout               @map("permissions.signout") // all
+  PasswordChange        @map("permissions.password-change") // all
+  RefreshToken          @map("permissions.refresh-token") // all
+  GetAllUsers           @map("permissions.get-all-users") // manager admin
+  GetUserById           @map("permissions.get-user-by-id") // all
+  GetUsersBySearchQuery @map("permissions.get-users-by-search-query") // manager admin
+  UpdateUser            @map("permissions.update-user") // all
+
+  GetAllCities        @map("permissions.get-all-cities") // all
+  GetCityById         @map("permissions.get-city-by-id") // all
+  CreateNewCity       @map("permissions.create-new-city") // all
+  UpdateCityTitleById @map("permissions.update-city-title-by-id") // all
+  DeleteCityById      @map("permissions.delete-city-by-id") // all
+
+  GetArrayOfPath     @map("permissions.get-array-of-path") // all
+  ChangeFlightStatus @map("permissions.change-flight-status") // admin
+  ChangeFlightPrice  @map("permissions.change-flight-price") // admin
+
+  GetAllTickets                 @map("permissions.get-all-tickets") // manager, admin
+  GetTicketById                 @map("permissions.get-ticket-by-id") // no
+  GetActiveTicketsByUserId      @map("permissions.get-active-tickets-by-user-id") // all
+  DeleteTicketById              @map("permissions.delete-ticket-by-id") // all
+  UpdateTicketStatus            @map("permissions.update-ticket-status") // admin, manager
+  CreateNewTicket               @map("permissions.create-new-ticket") // user
+  UpdateTicketHolderCredentials @map("permissions.update-ticket-holder-credentials") // all
+  GetTicketsInCartByUserId      @map("permissions.get-tickets-in-cart-by-user-id") // user
+  UpdateTicketStatusToOrdered   @map("permissions.update-ticket-status-to-ordered") // user
+
+  GetRooms         @map("permissions.get-rooms") // admin, manager
+  GetMessages      @map("permissions.get-messages") // all
+  SendMessages     @map("permissions.send-messages") // all
+  JoinRoom         @map("permissions.join-room") // admin, manager
+  PublishToRooms   @map("permissions.publish-to-rooms") // user
+  SubscribeToRooms @map("permissions.subscribe-to-rooms") // admin, manager
+
+  // devices
+  SignoutSelectSession @map("permissions.signout-selected-session") // all
+  SignoutSessions      @map("permissions.signout-sessions") // all
+  GetUserDevices       @map("permissions.get-user-devices") // all
+}
+
+model User {
+  id         String    @id @default(uuid()) @db.Uuid
+  first_name String
+  last_name  String
+  role_id    String    @db.Uuid
+  role_type  UserRoles
+  role       Role      @relation(fields: [role_id, role_type], references: [id, type])
+  email      String    @unique
+  password   String
+  tickets    Ticket[]
+  devices    Device[]
+
+  @@index([email])
+  @@index([id])
+  @@map("users")
+}
+
+model Device {
+  id          String   @id @default(uuid()) @db.Uuid
+  created_at  DateTime @default(now()) @db.Timestamptz()
+  updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz()
+  user_id     String   @default(uuid()) @db.Uuid
+  device_id   String   @default(uuid()) @db.Uuid
+  reset_token String?
+  user        User?    @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, device_id])
+  @@unique([device_id, reset_token])
+  @@map("devices")
+}
+
+model Ticket {
+  id                String       @id @default(uuid()) @db.Uuid
+  holder_first_name String
+  holder_last_name  String
+  flight            Flight       @relation(fields: [flight_id], references: [id])
+  flight_id         String       @db.Uuid
+  status            TicketStatus
+
+  user_id String @db.Uuid
+  user    User?  @relation(fields: [user_id], references: [id])
+
+  @@index([id])
+  @@map("tickets")
+}
+
+model Flight {
+  id                String       @id @default(uuid()) @db.Uuid
+  from_city_id      String       @db.Uuid
+  to_city_id        String       @db.Uuid
+  from_city         City         @relation(name: "from_city", fields: [from_city_id], references: [id])
+  to_city           City         @relation(name: "to_city", fields: [to_city_id], references: [id])
+  start_flight_date DateTime     @db.Timestamptz()
+  end_flight_date   DateTime     @db.Timestamptz()
+  status            FlightStatus
+  price             Int
+  available_seats   Int
+  ticket            Ticket[]
+  plane             Plane        @relation(fields: [plane_id], references: [id])
+  plane_id          String       @db.Uuid
+
+  @@index([id, from_city_id, to_city_id])
+  @@map("flights")
+}
+
+model Plane {
+  id      String   @id @default(uuid()) @db.Uuid
+  title   String
+  seats   Int
+  flights Flight[]
+
+  @@index([id])
+  @@map("planes")
+}
+
+model City {
+  id                String   @id @default(uuid()) @db.Uuid
+  title             String
+  flights_from_city Flight[] @relation("from_city")
+  flights_to_city   Flight[] @relation("to_city")
+
+  @@index([id])
+  @@map("cities")
+}
+
+model Role {
+  id          String            @id @default(uuid()) @db.Uuid
+  type        UserRoles
+  users       User[]
+  permissions UserPermissions[]
+
+  @@unique([id, type])
+  @@map("roles")
+}

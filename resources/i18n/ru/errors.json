@@ -1,0 +1,40 @@
+{
+    "field-invalid.should-be-string": "Поле должно быть строкой.",
+    "field-invalid.should-be-number": "Поле должно быть числом.",
+    "field-invalid.should-be-enum": "Поле должно быть одним из допустимых значений.",
+    "field-invalid.should-be-email": "Поле должно содержать действительный адрес электронной почты.",
+    "field-invalid.should-be-uuid": "Поле должно содержать uuid",
+
+    "invalid-form": "Некорректные данные формы.",
+    "not-authorized.request": "У вас нет прав для выполнения этого запроса.",
+    "auth.not-exists.user": "Пользователь не существует.",
+    "invalid-password": "Неверный пароль",
+    "expired-token": "Токен устарел",
+    "alredy-registered": "Пользователь с таким Email уже зарегистрирован",
+    "error": "Ошибка",
+
+    "create-user": "Ошибка создания пользователя",
+    "update-user":"Ошибка обновления пользователя",
+    "no-user":"Нет пользователя",
+    "no-users":"Нет пользователей",
+
+    "existed-city": "Город уже существует",
+    "no-city": "Не существует города",
+    "no-cities": "Не существует городов",
+    "create-city": "Нельзя создать город",
+    "update-city":"Нельзя изменить город",
+    
+    "no-ticket": "Нет билета",
+    "no-tickets": "Нет билетов",
+    "create-ticket": "Ошибка создания билета",
+    "update-ticket-creds":"Ошибка обновления данных в билете", 
+    "update-ticket-status":"Ошибка обновления статуса билета",
+
+    "no-flights": "Нет полетов в этот день",
+    "no-path": "Нет пути в этот день",
+    "no-sorted-paths-by-price":"Нет отсортированных по цене маршрутов",
+    "no-avaliable-seats":"нет доступных мест на этот рейс",
+
+    "no-rooms": "Нет сохраненных чатов",
+    "no-messages": "Нет сообщений"
+}

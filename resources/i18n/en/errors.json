@@ -1,0 +1,40 @@
+{
+  "field-invalid.should-be-string": "The field should be a string.",
+  "field-invalid.should-be-number": "The field should be a number.",
+  "field-invalid.should-be-enum": "The field should be one of the allowed values.",
+  "field-invalid.should-be-email": "The field should be a valid email address.",
+  "field-invalid.should-be-uuid": "The field should be a uuid",
+
+  "invalid-form": "Invalid form data.",
+  "not-authorized.request": "You are not authorized to perform this request.",
+  "auth.not-exists.user": "User does not exist.",
+  "invalid-password": "Invalid password",
+  "expired-token": "Expired token",
+  "alredy-registered": "User with this email already registered",
+  "error": "Error",
+
+  "create-user": "Cannot create user",
+  "update-user":"Cannot update user",
+  "no-user":"There is no user",
+  "no-users":"There are no users",
+
+  "existed-city": "City already exists",
+  "no-city": "No such city",
+  "no-cities": "No such cities",
+  "create-city": "Cannot create city",
+  "update-city":"Cannot update city",
+
+  "no-ticket": "There is no ticket",
+  "no-tickets": "There are no tickets",
+  "create-ticket": "Cannot create ticket",
+  "update-ticket-creds":"Update ticket credentials error", 
+  "update-ticket-status":"Update ticket status error",
+
+  "no-flights": "no flights on this date",
+  "no-path" : "no path on this date",
+  "no-sorted-paths-by-price":"There are no paths sorted by price",
+  "no-avaliable-seats":"no available seats on this date",
+
+  "no-rooms": "No rooms found",
+  "no-messages": "No messages found"
+}
